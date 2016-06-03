@@ -10,6 +10,8 @@ local item_dir = os.getenv('item_dir')
 local downloaded = {}
 local addedtolist = {}
 
+local abortgrab = false
+
 for ignore in io.open("ignore-list", "r"):lines() do
   downloaded[ignore] = true
 end
@@ -77,6 +79,9 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
   
   if string.match(url, item_value) and not (string.match(url, "%.mp4$") or string.match(url, "%.ts$") or string.match(url, "%.flv$")) then
     html = read_file(file)
+    if url == "http://www.zippcast.com/video/"..item_value and not string.match(html, "%.m3u8") then
+      abortgrab = true
+    end
     for newurl in string.gmatch(html, '([^"]+)') do
       checknewurl(newurl)
     end
@@ -118,6 +123,11 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
 
   if downloaded[url["url"]] == true then
     return wget.actions.EXIT
+  end
+
+  if abortgrab == true then
+    print("No m3u8 file! ABORTING...")
+    return wget.actions.ABORT
   end
 
   if (status_code >= 200 and status_code <= 399) then
