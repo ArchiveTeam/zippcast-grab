@@ -58,11 +58,7 @@ if not WGET_LUA:
 #
 # Update this each time you make a non-cosmetic change.
 # It will be added to the WARC files and reported to the tracker.
-<<<<<<< HEAD
 VERSION = "20160604.02"
-=======
-VERSION = "20160604.01"
->>>>>>> origin/master
 USER_AGENT = 'ArchiveTeam'
 TRACKER_ID = 'zippcast'
 TRACKER_HOST = 'tracker.archiveteam.org'
